@@ -1,0 +1,329 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Year 9 Maths Flashcards</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap">
+<style>
+/* Layout: one centred column — deck chips, a single exercise-book card on graph paper, then the two marking buttons. */
+:root{
+  --bg:#eef1f6; --surface:#ffffff; --ink:#18213a; --muted:#5b6582;
+  --line:#d5dcea; --grid:#e3e9f5; --ink-blue:#2346d8; --ink-blue-soft:#e3e9ff;
+  --highlight:#ffe45c; --good:#147a4b; --good-soft:#dcf3e7; --again:#b4471b; --again-soft:#fbe6dc;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --shadow:0 1px 2px rgba(24,33,58,.06), 0 8px 24px rgba(24,33,58,.08);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111523; --surface:#1a2033; --ink:#e8ecf7; --muted:#9aa4c2;
+  --line:#2e3752; --grid:#232a40; --ink-blue:#8ea6ff; --ink-blue-soft:#25305a;
+  --highlight:#6b5d10; --good:#5fd39b; --good-soft:#18392b; --again:#ff9a6e; --again-soft:#41241a;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111523; --surface:#1a2033; --ink:#e8ecf7; --muted:#9aa4c2;
+  --line:#2e3752; --grid:#232a40; --ink-blue:#8ea6ff; --ink-blue-soft:#25305a;
+  --highlight:#6b5d10; --good:#5fd39b; --good-soft:#18392b; --again:#ff9a6e; --again-soft:#41241a;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.5;
+  padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px));padding-block:20px 32px}
+.wrap{max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+header{display:flex;flex-direction:column;gap:4px}
+h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,5vw,2.1rem);line-height:1.1;margin:0;text-wrap:balance;letter-spacing:-.01em}
+h1 mark{background:linear-gradient(transparent 55%, var(--highlight) 55%);color:inherit;padding:0 .1em}
+.sub{color:var(--muted);margin:0;font-size:.95rem}
+
+.chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;scrollbar-width:thin}
+.chip{flex:0 0 auto;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;
+  padding:7px 12px;font:inherit;font-size:.85rem;cursor:pointer;display:flex;flex-direction:column;align-items:flex-start;line-height:1.2}
+.chip small{color:var(--muted);font-size:.7rem;letter-spacing:.04em;text-transform:uppercase}
+.chip[aria-pressed="true"]{background:var(--ink-blue);border-color:var(--ink-blue);color:var(--surface)}
+.chip[aria-pressed="true"] small{color:inherit;opacity:.85}
+.chip.today:not([aria-pressed="true"]){border-color:var(--ink-blue)}
+
+.status{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:.9rem;color:var(--muted)}
+.bar{flex:1 1 160px;height:6px;background:var(--line);border-radius:3px;overflow:hidden;min-width:120px}
+.bar span{display:block;height:100%;background:var(--good);width:0;transition:width .3s}
+.tally{font-variant-numeric:tabular-nums}
+
+.stage{perspective:1400px}
+.card{position:relative;width:100%;min-height:320px;cursor:pointer;transform-style:preserve-3d;transition:transform .45s cubic-bezier(.3,.7,.3,1);border:0;padding:0;background:none;font:inherit;color:inherit;text-align:left;display:block}
+.card.flipped{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;border-radius:14px;
+  background-color:var(--surface);
+  background-image:linear-gradient(var(--grid) 1px, transparent 1px),linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size:22px 22px;background-position:-1px -1px;
+  border:1px solid var(--line);box-shadow:var(--shadow);padding:20px 22px;display:flex;flex-direction:column;gap:12px}
+.face.back{transform:rotateY(180deg)}
+.tag{font-size:.72rem;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-blue);font-weight:700;display:flex;justify-content:space-between;gap:8px}
+.tag .side{color:var(--muted)}
+.q{font-family:var(--display);font-weight:700;font-size:clamp(1.35rem,4.6vw,1.75rem);line-height:1.25;margin:auto 0;text-wrap:balance}
+.a{font-family:var(--display);font-weight:700;font-size:clamp(1.25rem,4.2vw,1.6rem);line-height:1.3;margin-top:auto;color:var(--ink-blue)}
+.ex{background:var(--surface);border-left:3px solid var(--highlight);padding:6px 10px;font-size:.98rem;margin-bottom:auto;border-radius:0 6px 6px 0}
+.ex:empty{display:none}
+.hint{font-size:.8rem;color:var(--muted);text-align:center;margin-top:auto}
+
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn{font:inherit;font-weight:700;font-size:1rem;border-radius:12px;padding:14px 12px;cursor:pointer;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.btn.again{background:var(--again-soft);color:var(--again);border-color:transparent}
+.btn.good{background:var(--good-soft);color:var(--good);border-color:transparent}
+.btn:disabled{opacity:.45;cursor:default}
+.tools{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.link{font:inherit;font-size:.88rem;background:none;border:1px solid var(--line);color:var(--muted);padding:7px 12px;border-radius:999px;cursor:pointer}
+.link:hover,.chip:hover{border-color:var(--ink-blue)}
+:focus-visible{outline:3px solid var(--ink-blue);outline-offset:2px}
+
+.done{text-align:center;padding:36px 20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;display:flex;flex-direction:column;gap:10px;align-items:center}
+.done h2{font-family:var(--display);margin:0;font-size:1.5rem}
+.done p{margin:0;color:var(--muted)}
+.keys{font-size:.8rem;color:var(--muted);text-align:center;margin:0}
+kbd{font-family:var(--body);border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:0 5px;background:var(--surface)}
+@media (prefers-reduced-motion: reduce){.card{transition:none}.bar span{transition:none}}
+@media (max-width:420px){.keys{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Year 9 Maths <mark>Flashcards</mark></h1>
+    <p class="sub">Exam Thu 29 Oct · Chapters 1–7, 9, 10. Tap a card to flip it, then mark how you went.</p>
+  </header>
+
+  <nav class="chips" id="chips" aria-label="Choose a deck"></nav>
+
+  <div class="status">
+    <span class="tally" id="tally"></span>
+    <div class="bar" aria-hidden="true"><span id="barFill"></span></div>
+  </div>
+
+  <div id="play">
+    <div class="stage">
+      <button class="card" id="card" aria-label="Flashcard. Press to flip.">
+        <div class="face front">
+          <div class="tag"><span id="tagF"></span><span class="side">Question</span></div>
+          <div class="q" id="q"></div>
+          <div class="hint">Tap to see the answer</div>
+        </div>
+        <div class="face back">
+          <div class="tag"><span id="tagB"></span><span class="side">Answer</span></div>
+          <div class="a" id="a"></div>
+          <div class="ex" id="ex"></div>
+        </div>
+      </button>
+    </div>
+  </div>
+
+  <div class="done" id="done" hidden>
+    <h2 id="doneTitle">Deck done</h2>
+    <p id="doneText"></p>
+    <div class="tools">
+      <button class="btn good" id="redoMissed">Go again with the tricky ones</button>
+      <button class="link" id="restart">Start the whole deck again</button>
+    </div>
+  </div>
+
+  <div class="controls" id="controls">
+    <button class="btn again" id="againBtn" disabled>Still learning</button>
+    <button class="btn good" id="goodBtn" disabled>Got it</button>
+  </div>
+
+  <div class="tools">
+    <button class="link" id="shuffle">Shuffle</button>
+    <button class="link" id="reset">Reset my progress</button>
+  </div>
+  <p class="keys"><kbd>Space</kbd> flip · <kbd>←</kbd> still learning · <kbd>→</kbd> got it</p>
+  <p class="keys" id="resetNote" hidden>Progress cleared.</p>
+</div>
+
+<script>
+const DECKS = [
+ {id:"1", day:"Mon 19", date:"2026-10-19", name:"Ch 1 Number"},
+ {id:"2", day:"Tue 20", date:"2026-10-20", name:"Ch 2 Finance"},
+ {id:"3", day:"Wed 21", date:"2026-10-21", name:"Ch 3 Equations"},
+ {id:"9", day:"Thu 22", date:"2026-10-22", name:"Ch 9 Quadratics"},
+ {id:"7", day:"Fri 23", date:"2026-10-23", name:"Ch 7 Indices"},
+ {id:"4", day:"Sat 24", date:"2026-10-24", name:"Ch 4 Triangles"},
+ {id:"6", day:"Sun 25", date:"2026-10-25", name:"Ch 6 Measurement"},
+ {id:"5", day:"Mon 26", date:"2026-10-26", name:"Ch 5 Linear"},
+ {id:"10", day:"Tue 27", date:"2026-10-27", name:"Ch 10 Probability & data"}
+];
+const TITLES = {"1":"Ch 1 · Integers, fractions, ratios, rates","2":"Ch 2 · Financial maths","3":"Ch 3 · Expressions & equations","9":"Ch 9 · Quadratics & algebraic fractions","7":"Ch 7 · Indices","4":"Ch 4 · Right-angled triangles","6":"Ch 6 · Area, surface area, volume","5":"Ch 5 · Linear relationships","10":"Ch 10 · Probability & data"};
+const C = (ch,q,a,ex="") => ({ch,q,a,ex});
+const CARDS = [
+ C("1","Multiplying or dividing two negatives gives…","A positive","Same signs → positive, different signs → negative. −7 × (−4) = 28"),
+ C("1","3 − (−7) = ?","10","Subtracting a negative is the same as adding: 3 + 7"),
+ C("1","(−4)² compared with −4²","(−4)² = 16 but −4² = −16","Without brackets the power only applies to the 4"),
+ C("1","What does BODMAS stand for?","Brackets · Orders (powers and roots) · Division and Multiplication · Addition and Subtraction","Do D and M left to right, then A and S left to right. 3 × (−4 + 2) − 5 = 3 × (−2) − 5 = −11"),
+ C("1","Where do significant figures start?","At the first non-zero digit","0.0375 to 2 s.f. = 0.038 · 7842 to 2 s.f. = 7800"),
+ C("1","Rational number","Any number you can write as a fraction of two integers","Includes terminating and recurring decimals, e.g. 0.75, 0.333…"),
+ C("1","Irrational number","A number that can't be written as a fraction","π, √2, √7 — the decimal never ends or repeats"),
+ C("1","How do you divide fractions?","Multiply by the reciprocal (flip the second fraction)","2/3 ÷ 4/5 = 2/3 × 5/4 = 5/6"),
+ C("1","Steps to divide an amount in a ratio","Add the parts → find one part → multiply","$240 in 3 : 5 → 8 parts → $30 each → $90 and $150"),
+ C("1","Speed formula","speed = distance ÷ time","Also: distance = speed × time, time = distance ÷ speed"),
+ C("1","Ratio vs rate","Ratio: same units (3 : 4). Rate: different units (km/h, $/kg)"),
+ C("1","How do you find the best buy?","Compare the price per unit — lowest wins","2 L for $3.60 = $1.80/L vs 3 L for $5.10 = $1.70/L"),
+
+ C("2","Percentage change","change ÷ original × 100"),
+ C("2","Multiplier to increase by 15%, and to decrease by 15%","× 1.15 to increase · × 0.85 to decrease"),
+ C("2","How do you find the original amount after a % change?","Divide the new amount by the multiplier","After 20% off it's $64 → 64 ÷ 0.8 = $80"),
+ C("2","Percentage profit","profit ÷ cost price × 100","Profit = selling price − cost price"),
+ C("2","Time-and-a-half and double time","× 1.5 and × 2 the normal hourly rate","$24/h → $36/h at time-and-a-half"),
+ C("2","Commission","Pay calculated as a percentage of sales","$350 retainer + 5% of $9000 = $800"),
+ C("2","Gross income vs net income","Gross: before tax. Net: after tax and deductions","Net = gross − tax − deductions"),
+ C("2","Taxable income","Gross income − allowable deductions","Look this up in the tax table to find the tax"),
+ C("2","Simple interest formula","I = PRT","P = principal, R = rate as a decimal per year, T = years"),
+ C("2","18 months written in years","1.5 years","Months ÷ 12"),
+ C("2","Weekly pay from a yearly salary","Salary ÷ 52","$62 400 ÷ 52 = $1200"),
+
+ C("3","Like terms","Same pronumerals with the same powers","3xy and −5yx are like · 3x and 3x² are not"),
+ C("3","Expand −2(3m − 4)","−6m + 8","Negative × negative = positive"),
+ C("3","Coefficient","The number in front of a pronumeral","In 5x the coefficient is 5"),
+ C("3","Golden rule for solving equations","Do the same thing to both sides, undoing operations in reverse order"),
+ C("3","Solve (x + 3)/4 = 5","x = 17","Multiply both sides by 4 first: x + 3 = 20"),
+ C("3","Solve 5x + 2 = 2x + 11","x = 3","Move the smaller x term: 3x + 2 = 11 → 3x = 9"),
+ C("3","Steps for an equation word problem","Say what the pronumeral means → write the equation → solve → answer in words"),
+ C("3","Using a formula","Substitute what you know, then solve for the unknown","v = u + at with v = 30, u = 6, t = 4 → a = 6"),
+
+ C("9","(a + b)(c + d)","ac + ad + bc + bd","Every term times every term"),
+ C("9","(a + b)²","a² + 2ab + b²","Don't forget the middle term"),
+ C("9","(a − b)²","a² − 2ab + b²"),
+ C("9","(a + b)(a − b)","a² − b²","Difference of two squares"),
+ C("9","Factorise 6x² + 9x","3x(2x + 3)","Take out the HCF of the numbers and the pronumerals"),
+ C("9","HCF","Highest common factor: the biggest factor shared by every term"),
+ C("9","Multiplying algebraic fractions","Factorise → cancel common factors → multiply","For dividing, flip the second fraction first"),
+ C("9","x/3 + x/4","7x/12","Use the lowest common denominator, 12"),
+ C("9","Binomial","An expression with two terms","x + 3, 2a − 5"),
+
+ C("7","aᵐ × aⁿ","aᵐ⁺ⁿ","Same base: add the indices"),
+ C("7","aᵐ ÷ aⁿ","aᵐ⁻ⁿ","Same base: subtract the indices"),
+ C("7","(aᵐ)ⁿ","aᵐⁿ","Power of a power: multiply the indices"),
+ C("7","a⁰","1","But 5x⁰ = 5 × 1 = 5"),
+ C("7","a⁻ⁿ","1 ÷ aⁿ","2⁻³ = 1/8"),
+ C("7","(2x³)²","4x⁶","The power applies to the 2 as well"),
+ C("7","Scientific notation form","a × 10ⁿ, where 1 ≤ a < 10","Big numbers: positive n. Small numbers: negative n"),
+ C("7","0.00042 in scientific notation","4.2 × 10⁻⁴"),
+ C("7","72 as a product of prime factors","2³ × 3²"),
+
+ C("4","Pythagoras' theorem","c² = a² + b²","c is the hypotenuse"),
+ C("4","How do you find a shorter side with Pythagoras?","a² = c² − b² (subtract)"),
+ C("4","Hypotenuse","The longest side, opposite the right angle"),
+ C("4","SOH CAH TOA","sin θ = O ÷ H · cos θ = A ÷ H · tan θ = O ÷ A"),
+ C("4","Solve cos 50° = 8 ÷ x","x = 8 ÷ cos 50° ≈ 12.45","Unknown on the bottom: swap it with the trig ratio"),
+ C("4","How do you find an angle?","Use the inverse: θ = sin⁻¹, cos⁻¹ or tan⁻¹ of the ratio","θ = tan⁻¹(7 ÷ 10) ≈ 35.0°"),
+ C("4","Angle of elevation vs angle of depression","Elevation: up from the horizontal. Depression: down from the horizontal","They are equal (alternate angles)"),
+ C("4","Calculator mode for trig","Degrees (D or DEG on the screen)"),
+ C("4","Common Pythagorean triples","3, 4, 5 · 5, 12, 13 · 6, 8, 10 · 7, 24, 25"),
+
+ C("6","Circumference of a circle","C = 2πr = πd"),
+ C("6","Area of a circle","A = πr²"),
+ C("6","Area of a trapezium","½(a + b)h","a and b are the parallel sides"),
+ C("6","Area of a rhombus or kite","½xy","x and y are the diagonals"),
+ C("6","Perimeter of a sector with angle θ","θ/360 × 2πr + 2r","The arc plus the two radii"),
+ C("6","Surface area of a cylinder","2πr² + 2πrh","Two circles plus the curved rectangle"),
+ C("6","Volume of a prism","V = Ah","A = area of the cross-section"),
+ C("6","Volume of a cylinder","V = πr²h"),
+ C("6","1 m² in cm²","10 000 cm²","Square the conversion: 100 × 100"),
+ C("6","Capacity conversions","1 cm³ = 1 mL · 1 L = 1000 mL · 1 m³ = 1000 L"),
+
+ C("5","Gradient between two points","m = (y₂ − y₁) ÷ (x₂ − x₁)","rise ÷ run"),
+ C("5","In y = mx + c, what are m and c?","m = gradient, c = y-intercept"),
+ C("5","How do you find the intercepts?","y-intercept: set x = 0. x-intercept: set y = 0","3x + 2y = 12 → x-int 4, y-int 6"),
+ C("5","Horizontal and vertical lines","Horizontal: y = c (gradient 0). Vertical: x = a (gradient undefined)"),
+ C("5","Midpoint of a segment","((x₁ + x₂) ÷ 2, (y₁ + y₂) ÷ 2)","Average the x's, average the y's"),
+ C("5","Length of a segment","√((x₂ − x₁)² + (y₂ − y₁)²)","It's Pythagoras"),
+ C("5","Direct variation","y = kx — a straight line through the origin","k is the gradient"),
+ C("5","Rearrange 2x + 3y = 6 into y = mx + c","y = −⅔x + 2"),
+ C("5","Positive vs negative gradient","Positive slopes up to the right. Negative slopes down to the right"),
+
+ C("10","Probability of an event","favourable outcomes ÷ total outcomes","Always between 0 and 1"),
+ C("10","P(not A)","1 − P(A)","P(rain) = 0.35 → P(no rain) = 0.65"),
+ C("10","P(A or B)","P(A) + P(B) − P(A and B)","Subtract the overlap so it isn't counted twice"),
+ C("10","How do you use a tree diagram?","Multiply along the branches, then add the branches you want"),
+ C("10","What changes without replacement?","The total (and maybe the count you want) drops by 1 on the next pick","3 red, 2 green: P(red, red) = 3/5 × 2/4"),
+ C("10","Relative frequency","frequency ÷ number of trials"),
+ C("10","Expected number","probability × number of trials","P = 0.3 over 200 spins → 60"),
+ C("10","Mean and median","Mean = total ÷ count. Median = middle value of the ordered data","Even count: average the two middle values"),
+ C("10","Mode and range","Mode = most common value. Range = highest − lowest"),
+ C("10","What must a stem-and-leaf plot have?","Ordered leaves and a key"),
+ C("10","Histogram vs column graph","A histogram has no gaps between columns","It shows grouped numerical data")
+];
+CARDS.forEach((c,i)=>c.id=i);
+
+const store = {
+  get(k,f){try{const v=localStorage.getItem(k);return v?JSON.parse(v):f}catch(e){return f}},
+  set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+};
+let known = new Set(store.get("y9fc-known",[]));
+let deckId = store.get("y9fc-deck",null);
+let queue=[], missed=[], flipped=false, roundTotal=0, roundDone=0;
+
+const $ = id => document.getElementById(id);
+function todayDeck(){
+  const d=new Date(); const iso=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const m=DECKS.find(x=>x.date===iso); return m?m.id:null;
+}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function deckCards(id){return id==="all"?CARDS:CARDS.filter(c=>c.ch===id)}
+
+function renderChips(){
+  const t=todayDeck(); const el=$("chips"); el.innerHTML="";
+  const mk=(id,small,label)=>{const b=document.createElement("button");b.className="chip"+(id===t?" today":"");b.setAttribute("aria-pressed",String(id===deckId));
+    b.innerHTML=`<small>${small}</small>${label}`;b.onclick=()=>{deckId=id;store.set("y9fc-deck",id);renderChips();startRound(deckCards(id))};el.appendChild(b)};
+  mk("all","Everything",`All ${CARDS.length} cards`);
+  DECKS.forEach(d=>mk(d.id,d.day+(d.id===t?" · today":""),d.name));
+  const on=el.querySelector('[aria-pressed="true"]'); if(on) on.scrollIntoView({block:"nearest",inline:"center"});
+}
+function startRound(cards){
+  queue=shuffle(cards.slice()); missed=[]; roundTotal=queue.length; roundDone=0;
+  $("done").hidden=true; $("play").hidden=false; $("controls").hidden=false; show();
+}
+function show(){
+  updateTally();
+  if(!queue.length){finish();return}
+  const c=queue[0]; flipped=false; $("card").classList.remove("flipped");
+  $("tagF").textContent=$("tagB").textContent=TITLES[c.ch];
+  $("q").textContent=c.q; $("a").textContent=c.a; $("ex").textContent=c.ex;
+  $("againBtn").disabled=$("goodBtn").disabled=true;
+}
+function flip(){ if(!queue.length) return; flipped=!flipped; $("card").classList.toggle("flipped",flipped); if(flipped){$("againBtn").disabled=$("goodBtn").disabled=false} }
+function mark(good){
+  if(!flipped||!queue.length) return;
+  const c=queue.shift();
+  if(good){known.add(c.id);roundDone++} else {known.delete(c.id); if(!missed.includes(c)) missed.push(c); queue.splice(Math.min(queue.length,3),0,c)}
+  store.set("y9fc-known",[...known]); show();
+}
+function updateTally(){
+  const cards=deckCards(deckId); const k=cards.filter(c=>known.has(c.id)).length;
+  $("tally").textContent=`This round: ${roundDone}/${roundTotal} · Known overall: ${k}/${cards.length}`;
+  $("barFill").style.width=(roundTotal?roundDone/roundTotal*100:0)+"%";
+}
+function finish(){
+  $("play").hidden=true; $("controls").hidden=true; $("done").hidden=false;
+  $("doneTitle").textContent=missed.length?"Deck done":"Perfect round";
+  $("doneText").textContent=missed.length?`You needed a second go on ${missed.length} card${missed.length>1?"s":""}. Run through just those once more.`:"You got every card first time. Try another deck or mix them all.";
+  $("redoMissed").hidden=!missed.length;
+}
+$("card").addEventListener("click",flip);
+$("againBtn").onclick=()=>mark(false);
+$("goodBtn").onclick=()=>mark(true);
+$("redoMissed").onclick=()=>startRound(missed.slice());
+$("restart").onclick=()=>startRound(deckCards(deckId));
+$("shuffle").onclick=()=>{if(queue.length){shuffle(queue);show()}};
+$("reset").onclick=()=>{known=new Set();store.set("y9fc-known",[]);$("resetNote").hidden=false;setTimeout(()=>$("resetNote").hidden=true,2000);updateTally()};
+document.addEventListener("keydown",e=>{
+  if(e.target.closest("nav")) return;
+  if(e.key===" "){e.preventDefault();flip()}
+  else if(e.key==="ArrowRight") mark(true);
+  else if(e.key==="ArrowLeft") mark(false);
+});
+if(!deckId||(deckId!=="all"&&!DECKS.some(d=>d.id===deckId))) deckId=todayDeck()||"all";
+renderChips(); startRound(deckCards(deckId));
+</script>
+</body>
+</html>
